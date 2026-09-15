@@ -1,0 +1,373 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Open Sync — "Ink & Amber" theme tokens (design.md §2) */
+    --ink-0: #0B0C0D;
+    --ink-1: #101214;
+    --ink-2: #16191B;
+    --ink-3: #1D2124;
+    --ink-4: #24292D;
+    --line-1: #262B2F;
+    --line-2: #31373C;
+
+    --text-1: #E9E5DC;
+    --text-2: #A8A399;
+    --text-3: #6E6960;
+    --text-inv: #141414;
+
+    --amber: #D9A441;
+    --amber-hi: #E8B95C;
+    --amber-dim: #7A5E26;
+    --amber-glow: rgba(217, 164, 65, 0.16);
+    --teal: #4F8C82;
+    --teal-hi: #66A89D;
+    --teal-dim: #2E4B46;
+    --danger: #C4634F;
+    --danger-hi: #D97B66;
+
+    --grade-A: #5FA98C;
+    --grade-B: #A9B368;
+    --grade-C: #D9A441;
+    --grade-D: #C4634F;
+
+    --band-delta: #8A8A84;
+    --band-theta: #9488A8;
+    --band-alpha: #5FA98C;
+    --band-beta: #D9A441;
+    --band-gamma: #C4634F;
+
+    --noise-white: #C9C4B8;
+    --noise-pink: #C48F8F;
+    --noise-brown: #A87E5B;
+    --noise-blue: #7C96A8;
+    --noise-violet: #9488A8;
+    --noise-grey: #8A8A84;
+
+    /* shadcn tokens mapped onto the ink palette */
+    --background: 60 3% 7%;
+    --foreground: 44 15% 89%;
+    --card: 210 6% 9%;
+    --card-foreground: 44 15% 89%;
+    --popover: 200 5% 13%;
+    --popover-foreground: 44 15% 89%;
+    --primary: 38 66% 55%;
+    --primary-foreground: 0 0% 8%;
+    --secondary: 210 6% 9%;
+    --secondary-foreground: 44 15% 89%;
+    --muted: 200 5% 13%;
+    --muted-foreground: 43 7% 64%;
+    --accent: 200 5% 13%;
+    --accent-foreground: 44 15% 89%;
+    --destructive: 9 49% 54%;
+    --destructive-foreground: 44 15% 89%;
+    --border: 200 6% 17%;
+    --input: 200 6% 17%;
+    --ring: 38 66% 55%;
+    --radius: 0.25rem;
+    --sidebar-background: 60 3% 7%;
+    --sidebar-foreground: 44 15% 89%;
+    --sidebar-primary: 38 66% 55%;
+    --sidebar-primary-foreground: 0 0% 8%;
+    --sidebar-accent: 210 6% 9%;
+    --sidebar-accent-foreground: 44 15% 89%;
+    --sidebar-border: 200 6% 17%;
+    --sidebar-ring: 38 66% 55%;
+
+    /* Motion tokens (ux_improvement_spec §2.1, P0-1) — the only durations
+       allowed. ≤400ms ceiling; ease-out entering, ease-in-out on-screen. */
+    --motion-1: 100ms ease-out; /* press/toggle, knob-fader drag feedback */
+    --motion-2: 150ms ease-out; /* hover, focus ring, value-readout fade */
+    --motion-3: 200ms cubic-bezier(0.4, 0, 0.2, 1); /* tab switch, state change */
+    --motion-4: 300ms cubic-bezier(0.32, 0.72, 0, 1); /* sheet/modal/palette enter */
+
+    /* Focus ring token (P0-8): 2px amber, visible on the dark theme. */
+    --focus-ring: 0 0 0 2px var(--ink-0), 0 0 0 4px var(--amber);
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--ink-0);
+    color: var(--text-1);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 24px;
+  }
+
+  ::selection {
+    background: rgba(217, 164, 65, 0.28);
+  }
+
+  /* P0-8: 2px amber focus ring everywhere keyboard focus lands. */
+  :focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [role='slider']:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+    box-shadow: var(--focus-ring);
+  }
+
+  /* Custom 8px scrollbar (design.md §6) */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--ink-4) var(--ink-1);
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: var(--ink-4);
+    border-radius: 0;
+  }
+  *::-webkit-scrollbar-track {
+    background: var(--ink-1);
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+  }
+  .font-mono2 {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Type scale (design.md §3.2) */
+  .t-display-xl { font-family: 'Space Grotesk', sans-serif; font-size: 56px; line-height: 60px; font-weight: 600; letter-spacing: -0.02em; }
+  .t-display-lg { font-family: 'Space Grotesk', sans-serif; font-size: 40px; line-height: 44px; font-weight: 600; letter-spacing: -0.02em; }
+  .t-h1 { font-family: 'Space Grotesk', sans-serif; font-size: 32px; line-height: 38px; font-weight: 600; letter-spacing: -0.015em; }
+  .t-h2 { font-family: 'Space Grotesk', sans-serif; font-size: 24px; line-height: 30px; font-weight: 600; }
+  .t-h3 { font-family: 'Space Grotesk', sans-serif; font-size: 18px; line-height: 24px; font-weight: 600; }
+  .t-body { font-family: 'Inter', sans-serif; font-size: 15px; line-height: 24px; }
+  .t-body-sm { font-family: 'Inter', sans-serif; font-size: 13px; line-height: 20px; }
+  .t-readout-xl { font-family: 'IBM Plex Mono', monospace; font-size: 48px; line-height: 52px; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .t-readout-lg { font-family: 'IBM Plex Mono', monospace; font-size: 28px; line-height: 32px; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .t-readout-md { font-family: 'IBM Plex Mono', monospace; font-size: 16px; line-height: 22px; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .t-readout-sm { font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 16px; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .t-label {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 14px;
+    font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-2);
+  }
+  .t-caption { font-family: 'Inter', sans-serif; font-size: 11px; line-height: 16px; }
+
+  /* Panel / card (design.md §5.7) */
+  .panel {
+    background: linear-gradient(180deg, var(--ink-2), #14171a);
+    border: 1px solid var(--line-1);
+    border-radius: 4px;
+    padding: 24px;
+  }
+
+  /* P2 density: compact trims padding/type; hit areas are governed by the
+     44px hit-slop rules and stay untouched. */
+  :root[data-density='compact'] .panel {
+    padding: 16px;
+  }
+  :root[data-density='compact'] body {
+    font-size: 14px;
+  }
+  .panel-interactive {
+    transition: transform 160ms ease-out, border-color 160ms ease-out, box-shadow 160ms ease-out;
+  }
+  .panel-interactive:hover {
+    border-color: var(--line-2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  }
+
+  /* Scope well (design.md §5.10) */
+  .scope-well {
+    background: var(--ink-0);
+    border: 1px solid var(--line-1);
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Chip / filter (design.md §5.8) */
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 28px; padding: 0 12px;
+    border: 1px solid var(--line-1); border-radius: 999px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-2);
+    background: transparent; cursor: pointer; white-space: nowrap;
+    transition: border-color var(--motion-2), color var(--motion-2), background var(--motion-2);
+  }
+  .chip:hover { border-color: var(--line-2); color: var(--text-1); }
+  .chip-active {
+    border-color: var(--amber); color: var(--amber);
+    background: rgba(217, 164, 65, 0.08);
+  }
+  .chip-danger { border-color: rgba(196, 99, 79, 0.6); color: var(--danger); }
+  .chip-danger.chip-active { background: rgba(196, 99, 79, 0.1); border-color: var(--danger); }
+
+  .hairline-b { border-bottom: 1px solid var(--line-1); }
+
+  /* ⌘K palette (cmdk) selection + group headings */
+  [cmdk-item][aria-selected='true'] {
+    background: var(--amber-glow);
+    color: var(--amber);
+  }
+  [cmdk-group-heading] {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-3);
+    padding: 8px 10px 4px;
+    text-transform: uppercase;
+  }
+
+  /* Danger hatch pattern for experimental constructs */
+  .hatch-danger {
+    background-image: repeating-linear-gradient(
+      -45deg, rgba(196, 99, 79, 0.55) 0 2px, transparent 2px 7px
+    );
+  }
+
+  /* Subtle grain overlay helper (procedural, no asset needed) */
+  .grain::after {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 60;
+    opacity: 0.035; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='128' height='128' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* LED pulse for danger alarms */
+  @keyframes led-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+  }
+  .led-alarm { animation: led-pulse 1.4s steps(2, jump-none) infinite; }
+
+  /* Route-chunk Suspense fallback — dim amber pulse on the led-pulse token */
+  .route-loading { animation: led-pulse 1.4s steps(2, jump-none) infinite; }
+
+  /* Panic breathing glow (4s, only while engine runs) */
+  @keyframes panic-breathe {
+    0%, 100% { box-shadow: 0 4px 16px rgba(196, 99, 79, 0.25); }
+    50% { box-shadow: 0 4px 28px rgba(196, 99, 79, 0.5); }
+  }
+  .panic-breathe { animation: panic-breathe 4s ease-in-out infinite; }
+
+  /* Value-commit amber flash */
+  @keyframes value-flash {
+    from { background-color: rgba(217, 164, 65, 0.35); }
+    to { background-color: transparent; }
+  }
+  .value-flash { animation: value-flash 200ms ease-out; }
+
+  @keyframes invalid-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+  }
+  .invalid-shake { animation: invalid-shake 80ms ease-in-out 2; }
+}
+
+@layer utilities {
+  .text-1 { color: var(--text-1); }
+  .text-2 { color: var(--text-2); }
+  .text-3 { color: var(--text-3); }
+  .text-amber { color: var(--amber); }
+  .text-amber-hi { color: var(--amber-hi); }
+  .text-teal { color: var(--teal); }
+  .text-teal-hi { color: var(--teal-hi); }
+  .text-danger { color: var(--danger); }
+  .bg-ink-0 { background-color: var(--ink-0); }
+  .bg-ink-1 { background-color: var(--ink-1); }
+  .bg-ink-2 { background-color: var(--ink-2); }
+  .bg-ink-3 { background-color: var(--ink-3); }
+  .bg-ink-4 { background-color: var(--ink-4); }
+  .bg-amber { background-color: var(--amber); }
+  .bg-teal { background-color: var(--teal); }
+  .bg-danger { background-color: var(--danger); }
+  .border-line-1 { border-color: var(--line-1); }
+  .border-line-2 { border-color: var(--line-2); }
+  .border-amber { border-color: var(--amber); }
+  .border-teal { border-color: var(--teal); }
+  .border-danger { border-color: var(--danger); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* W10 mobile shell: safe-area + touch-target utilities (additive only). */
+@layer utilities {
+  /* Full bottom-bar clearance for scrollable content on phone layouts. */
+  .pb-mobile-nav {
+    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+  }
+  /* Consume the iOS home-indicator inset below a fixed bottom bar. */
+  .pb-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .h-safe-bottom {
+    height: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Coarse-pointer touch targets: chips meet the 44/40px rule of thumb. */
+  @media (pointer: coarse) {
+    .chip {
+      min-height: 36px;
+    }
+  }
+}
+
+/* Collapsible sidebar: reopen handle shown when the rail is hidden (additive). */
+@layer components {
+  .rail-reopen-handle {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 45;
+    width: 16px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: var(--ink-2);
+    border: 1px solid var(--line-1);
+    border-left: 2px solid var(--amber);
+    border-radius: 0 2px 2px 0;
+    color: var(--text-3);
+    cursor: pointer;
+    opacity: 0.3;
+    transition: opacity var(--motion-2), color var(--motion-2), border-color var(--motion-2);
+  }
+  .rail-reopen-handle:hover,
+  .rail-reopen-handle:focus-visible {
+    opacity: 1;
+    color: var(--amber);
+    border-color: var(--line-2);
+    border-left-color: var(--amber);
+  }
+}
