@@ -1,11 +1,15 @@
 /**
- * Frequency library (W2): the 7 audited frequency sets, evidence-graded.
- * Every entry pins { hz | band, grade, origin, citation, note }. Grades:
- *   A = replicated human evidence for the narrow claim made
- *   B = suggestive human evidence / strong animal + plausible mechanism
- *   C = historical or cultural record; claims untested
- *   D = marketing construct, numerology, or audited-false provenance
- * Nothing here may be described as "proven to entrain" — see note fields.
+ * Evidence-graded frequency database.
+ *
+ * Grades:
+ *   A — solid physics / multiple peer-reviewed replications
+ *   B — some human evidence (small pilots / meta-analytic support)
+ *   C — plausible mechanism, weak or indirect evidence
+ *   D — folklore / numerology, no physiological evidence
+ *
+ * Every entry carries its documented origin and a citation. Honest labeling is
+ * the point: Solfeggio/chakra/angel/Fibonacci sets are modern numerology
+ * constructs; only the Schumann physics and a few pilot-backed items rank above D.
  */
 
 export type Grade = 'A' | 'B' | 'C' | 'D';
@@ -18,260 +22,331 @@ export interface FrequencyBand {
 export interface FrequencyEntry {
   id: string;
   name: string;
+  /** Single tone, Hz. Exactly one of hz/band is set. */
   hz?: number;
+  /** Frequency range, Hz (for bands). */
   band?: FrequencyBand;
   grade: Grade;
-  /** Audited provenance — where the number actually came from. */
+  /** Documented historical/cultural origin of the claim. */
   origin: string;
-  /** Best available literature anchor (or honest absence). */
+  /** Primary or best-available citation. */
   citation: string;
-  /** What the evidence does and does not support. */
   note: string;
+  /**
+   * Optional second grade when the arithmetic and the therapy claim split
+   * (e.g. planetary tones: A for the math, D for healing claims).
+   */
+  secondaryGrade?: Grade;
+  secondaryScope?: string;
 }
 
-export const FREQUENCIES: FrequencyEntry[] = [
-  // ------------------------------------------------------------- Schumann
+const SOLFEGGIO_ORIGIN =
+  'Modern construct: digit-reduction numerology of Book of Numbers verses by naturopath Joseph Puleo (mid-1970s), expanded/popularized by Leonard Horowitz, "Healing Codes for the Biological Apocalypse" (1999). Falsely backdated to Guido d\'Arezzo (~11th c.), whose solmization syllables carried no Hz values.';
+
+const solfeggio = (hz: number, name: string, note: string): FrequencyEntry => ({
+  id: `solfeggio-${hz}`,
+  name,
+  hz,
+  grade: 'D',
+  origin: SOLFEGGIO_ORIGIN,
+  citation:
+    'Evidence audit: musickanheal.com/528-hz-frequency (2026); no musicological documentation of Hz values before 1974.',
+  note,
+});
+
+export const FREQUENCIES: readonly FrequencyEntry[] = [
+  // ---------------------------------------------------------------- Solfeggio
+  solfeggio(174, 'Solfeggio 174 Hz', 'Numerology set member; no controlled physiological evidence.'),
+  solfeggio(285, 'Solfeggio 285 Hz', 'Numerology set member; added by Horowitz (1999).'),
+  solfeggio(396, 'Solfeggio 396 Hz ("UT")', 'Numerology set member; "liberating guilt" claim is folklore.'),
+  solfeggio(417, 'Solfeggio 417 Hz ("RE")', 'Numerology set member; "undoing situations" claim is folklore.'),
   {
-    id: 'schumann-1',
-    name: 'Schumann resonance, mode 1',
+    ...solfeggio(
+      528,
+      'Solfeggio 528 Hz ("MI", "DNA repair")',
+      'The "DNA repair" claim rests on Babayi & Riazi 2017, an in-vitro astrocyte study that measured NO DNA endpoint (pay-to-publish journal, unreplicated). A n=9 human pilot (Akimoto 2018) found acute cortisol decrease vs 440 Hz — Grade C signal only.',
+    ),
+    citation:
+      'Babayi & Riazi, J Addict Res Ther 8:335 (2017); Akimoto et al., Health 10 (2018); audit: trytomatoes.com/blog/528-hz',
+  },
+  solfeggio(639, 'Solfeggio 639 Hz ("FA")', 'Numerology set member; "connection" claim is folklore.'),
+  solfeggio(741, 'Solfeggio 741 Hz ("SOL")', 'Numerology set member; "intuition" claim is folklore.'),
+  solfeggio(852, 'Solfeggio 852 Hz ("LA")', 'Numerology set member; "third eye" mapping is a 1990s numerological graft.'),
+  solfeggio(963, 'Solfeggio 963 Hz', 'Numerology set member; added by Horowitz (1999); "crown" claim is folklore.'),
+
+  // ------------------------------------------------------------------ Schumann
+  {
+    id: 'schumann-fundamental',
+    name: 'Schumann resonance — fundamental',
     hz: 7.83,
-    grade: 'C',
+    grade: 'A',
     origin:
-      'Predicted by Winfried Otto Schumann (1952), first measured by Balser & Wagner (1960). Fundamental of the Earth-ionosphere cavity.',
-    citation:
-      'Balser & Wagner, Nature 188:638-641 (1960); Price, J. Atmos. Sol.-Terr. Phys. 159 (2017).',
+      'Predicted by W.O. Schumann (1952, Z. Naturforsch. A 7:149-154); first measured by Balser & Wagner, Nature 188:638-641 (1960); driven by global lightning in the Earth-ionosphere cavity.',
+    citation: 'Balser & Wagner, Nature 188, 638-641 (1960); continuous monitoring (Tomsk SOS, Hylaty).',
     note:
-      'Real geophysics, measured daily. No replicated evidence that listening to 7.83 Hz tones couples the brain to the cavity mode.',
+      'Grade A for the GEOPHYSICS. Measured 7.8-7.9 Hz, drifting with season/time of day; "Schumann is spiking" claims are false. 7.83 Hz is inaudible — any audio product SIMULATES it via binaural beat or AM envelope, not the EM field. Biological-coupling claims (Persinger group, Wever bunker retellings) are Grade C: correlational, unreplicated.',
   },
   {
-    id: 'schumann-2',
-    name: 'Schumann resonance, mode 2',
-    hz: 14.3,
-    grade: 'C',
-    origin:
-      'Second cavity mode. Varies ±0.5 Hz with ionospheric height; textbook value is a long-term average.',
-    citation: 'Nickolaenko & Hayakawa, Resonances in the Earth-Ionosphere Cavity (2002).',
-    note: 'Measured value drifts; apps shipping "exactly 14.1" are behind the literature.',
+    id: 'schumann-mode-2',
+    name: 'Schumann mode 2 (measured ~14.1 Hz)',
+    hz: 14.1,
+    grade: 'A',
+    origin: 'Earth-ionosphere cavity resonance; Balser & Wagner 1960; Hylaty ELF station power spectra.',
+    citation: 'Hylaty station report (Pol. J. Environ. Stud., 2016): modes at 7.9/14.2/20.3/26.4/32.3 Hz.',
+    note: 'Physics grade A. NOTE: the original site lists 14.3 Hz — systematically HIGH vs measurements; value here is the measured mode.',
   },
   {
-    id: 'schumann-3',
-    name: 'Schumann resonance, mode 3',
-    hz: 20.8,
-    grade: 'C',
-    origin: 'Third cavity mode.',
-    citation: 'Nickolaenko & Hayakawa (2002).',
-    note: 'Same geophysics-accurate / wellness-unproven status as mode 1.',
+    id: 'schumann-mode-3',
+    name: 'Schumann mode 3 (measured ~20.3 Hz)',
+    hz: 20.3,
+    grade: 'A',
+    origin: 'Earth-ionosphere cavity resonance; Balser & Wagner 1960; Hylaty ELF station power spectra.',
+    citation: 'Hylaty station report (Pol. J. Environ. Stud., 2016): 20.3 Hz; Balser & Wagner 1960: 19.6 Hz.',
+    note: 'Physics grade A. Original site lists 20.8 Hz — HIGH vs measured 19.6-20.3 Hz.',
   },
   {
-    id: 'schumann-4',
-    name: 'Schumann resonance, mode 4',
-    hz: 27.3,
-    grade: 'C',
-    origin: 'Fourth cavity mode.',
-    citation: 'Nickolaenko & Hayakawa (2002).',
-    note: 'Same status as mode 1.',
+    id: 'schumann-mode-4',
+    name: 'Schumann mode 4 (measured ~26.4 Hz)',
+    hz: 26.4,
+    grade: 'A',
+    origin: 'Earth-ionosphere cavity resonance; Balser & Wagner 1960; Hylaty ELF station power spectra.',
+    citation: 'Hylaty station report (Pol. J. Environ. Stud., 2016): 26.4 Hz; Balser & Wagner 1960: 25.9 Hz.',
+    note: 'Physics grade A. Original site lists 27.3 Hz — HIGH vs measured 25.9-26.4 Hz.',
   },
   {
-    id: 'schumann-5',
-    name: 'Schumann resonance, mode 5',
-    hz: 33.8,
-    grade: 'C',
-    origin: 'Fifth cavity mode, near the gamma-band edge used by vendors.',
-    citation: 'Nickolaenko & Hayakawa (2002).',
-    note: 'Same status as mode 1; gamma claims attached to it are vendor additions.',
+    id: 'schumann-mode-5',
+    name: 'Schumann mode 5 (measured ~32 Hz)',
+    hz: 32,
+    grade: 'A',
+    origin: 'Earth-ionosphere cavity resonance; Balser & Wagner 1960; Hylaty ELF station power spectra.',
+    citation: 'Hylaty station report (2016): 32.3 Hz; Balser & Wagner 1960: 32 Hz.',
+    note: 'Physics grade A. Original site lists 33.8 Hz — HIGH vs measured ~32 Hz.',
   },
 
-  // ------------------------------------------------------------ Solfeggio
-  {
-    id: 'solfeggio-174',
-    name: 'Solfeggio 174 Hz',
-    hz: 174,
+  // -------------------------------------------------------------------- Chakra
+  ...(
+    [
+      ['root', 396],
+      ['sacral', 417],
+      ['solar-plexus', 528],
+      ['heart', 639],
+      ['throat', 741],
+      ['third-eye', 852],
+      ['crown', 963],
+    ] as const
+  ).map(([chakra, hz]): FrequencyEntry => ({
+    id: `chakra-${chakra}`,
+    name: `Chakra — ${chakra} (${hz} Hz)`,
+    hz,
     grade: 'D',
     origin:
-      '1970s-90s numerology (Puleo/Horowitz): digit-sums on a 3x3 grid. No medieval source; the "Gregorian hymn" attribution is unverifiable.',
-    citation: 'No peer-reviewed literature; provenance audit 2026.',
-    note: 'Cultural artifact. Play it as a tone if you like it — not as medicine.',
-  },
-  {
-    id: 'solfeggio-285',
-    name: 'Solfeggio 285 Hz',
-    hz: 285,
-    grade: 'D',
-    origin: 'Same Puleo/Horowitz numerological series.',
-    citation: 'No peer-reviewed literature; provenance audit 2026.',
-    note: 'Same status as the rest of the set.',
-  },
-  {
-    id: 'solfeggio-396',
-    name: 'Solfeggio 396 Hz (Ut)',
-    hz: 396,
-    grade: 'D',
-    origin:
-      'Loosely attached to the medieval ut-re-mi solmization syllables; the Hz values themselves are modern.',
-    citation: 'No peer-reviewed literature; provenance audit 2026.',
-    note: '"Liberates guilt" claims are folklore.',
-  },
-  {
-    id: 'solfeggio-417',
-    name: 'Solfeggio 417 Hz (Re)',
-    hz: 417,
-    grade: 'D',
-    origin: 'Puleo/Horowitz series.',
-    citation: 'No peer-reviewed literature; provenance audit 2026.',
-    note: 'Same status.',
-  },
-  {
-    id: 'solfeggio-528',
-    name: 'Solfeggio 528 Hz (Mi, "love frequency")',
-    hz: 528,
-    grade: 'D',
-    origin:
-      'The most-marketed member: "DNA repair" claims trace to a 1999 Horowitz book, not to biology. One small rat study (cortisol) is endlessly overcited.',
+      'Chakras are a genuine ~1st-millennium Tantric contemplative system, but no traditional text assigns frequencies; the Hz mapping is 1990s-2000s Puleo/Horowitz numerology grafted onto chakra doctrine.',
     citation:
-      'Akimoto et al., J. Addiction Res. Ther. 9(3) (2018) — n=10 rats, cortisol only, never replicated in humans.',
-    note:
-      'Relaxing music at any pitch lowers arousal; nothing pins the effect to 528 specifically. Grade D for the marketed claim, not for the sound.',
-  },
-  {
-    id: 'solfeggio-639',
-    name: 'Solfeggio 639 Hz (Fa)',
-    hz: 639,
-    grade: 'D',
-    origin: 'Puleo/Horowitz series.',
-    citation: 'No peer-reviewed literature; provenance audit 2026.',
-    note: 'Same status.',
-  },
-  {
-    id: 'solfeggio-741',
-    name: 'Solfeggio 741 Hz (Sol)',
-    hz: 741,
-    grade: 'D',
-    origin: 'Puleo/Horowitz series.',
-    citation: 'No peer-reviewed literature; provenance audit 2026.',
-    note: 'Same status.',
-  },
-  {
-    id: 'solfeggio-852',
-    name: 'Solfeggio 852 Hz (La)',
-    hz: 852,
-    grade: 'D',
-    origin: 'Puleo/Horowitz series.',
-    citation: 'No peer-reviewed literature; provenance audit 2026.',
-    note: 'Same status.',
-  },
-  {
-    id: 'solfeggio-963',
-    name: 'Solfeggio 963 Hz',
-    hz: 963,
-    grade: 'D',
-    origin: 'Puleo/Horowitz series ("God frequency" marketing).',
-    citation: 'No peer-reviewed literature; provenance audit 2026.',
-    note: 'Same status.',
-  },
+      'soundr.xyz chakra-frequency guide (2024): "the specific healing claims for these frequencies lack peer-reviewed scientific support."',
+    note: 'Meditation/cultural soundscape only; no physiological evidence for the assignment.',
+  })),
 
-  // --------------------------------------------------------------- Chakra
+  // ------------------------------------------------------- Planetary (Cousto)
   {
-    id: 'chakra-root',
-    name: 'Chakra set — root (194.18 Hz "Earth day")',
+    id: 'planetary-om',
+    name: 'OM — Earth year octave tone',
+    hz: 136.1,
+    grade: 'A',
+    secondaryGrade: 'D',
+    secondaryScope: 'therapeutic claims',
+    origin:
+      'Hans Cousto, "Die Kosmische Oktave" (1978/1984): orbital period 365.256 d -> 3.1688e-8 Hz, octave-doubled x2^32 = 136.10 Hz (C#). Lineage: Pythagoras -> Kepler, Harmonices Mundi (1619) -> Kayser -> Cousto.',
+    citation: 'Cousto, The Cosmic Octave (LifeRhythm); planetware.de/octave (f = (1/T) x 2^n).',
+    note:
+      'Grade A for the ARITHMETIC (exactly reproducible); Grade D for any healing claim — an octave of an orbital period is a representational device; planets do not emit sound in space.',
+  },
+  {
+    id: 'planetary-earth-day',
+    name: 'Earth day octave tone',
     hz: 194.18,
-    grade: 'D',
-    origin:
-      'Hans Cousto "Cosmic Octave" (1978): octave-doubling of astronomical periods into audio range. Arithmetic is correct; meaning is asserted.',
-    citation: 'Cousto, The Cosmic Octave (1988 English ed.); no peer-reviewed validation.',
-    note: 'Split-grade in Sonic Lab: arithmetic A · meaning D. Here graded on meaning.',
+    grade: 'A',
+    secondaryGrade: 'D',
+    secondaryScope: 'therapeutic claims',
+    origin: 'Cousto Cosmic Octave: mean solar day 86400 s -> 1/86400 Hz octave-doubled x2^24 = 194.18 Hz (using the sidereal day 86164 s would give ~194.71 Hz; Cousto publishes 194.18).',
+    citation: 'Cousto, The Cosmic Octave; planetware.de/octave.',
+    note: 'Arithmetic A; therapy D (no controlled studies).',
   },
   {
-    id: 'chakra-crown',
-    name: 'Chakra set — crown (172.06 Hz "Platonic year")',
-    hz: 172.06,
-    grade: 'D',
-    origin: 'Cousto Cosmic Octave, axial precession period octave-shifted.',
-    citation: 'Cousto (1988); no peer-reviewed validation.',
-    note: 'Same split-grade status.',
+    id: 'planetary-mercury',
+    name: 'Mercury octave tone',
+    hz: 141.27,
+    grade: 'A',
+    secondaryGrade: 'D',
+    secondaryScope: 'therapeutic claims',
+    origin: 'Cousto Cosmic Octave: Mercury orbital period 87.97 d octave-doubled = 141.27 Hz.',
+    citation: 'Cousto tuning-fork tables (jini-site The_CoOc_Tuning.pdf).',
+    note: 'Arithmetic A; therapy D.',
+  },
+  {
+    id: 'planetary-venus',
+    name: 'Venus octave tone',
+    hz: 221.23,
+    grade: 'A',
+    secondaryGrade: 'D',
+    secondaryScope: 'therapeutic claims',
+    origin: 'Cousto Cosmic Octave: Venus orbital period octave-doubled = 221.23 Hz.',
+    citation: 'Cousto tuning-fork tables.',
+    note: 'Arithmetic A; therapy D.',
+  },
+  {
+    id: 'planetary-mars',
+    name: 'Mars octave tone',
+    hz: 144.72,
+    grade: 'A',
+    secondaryGrade: 'D',
+    secondaryScope: 'therapeutic claims',
+    origin: 'Cousto Cosmic Octave: Mars orbital period octave-doubled = 144.72 Hz.',
+    citation: 'Cousto tuning-fork tables.',
+    note: 'Arithmetic A; therapy D.',
+  },
+  {
+    id: 'planetary-jupiter',
+    name: 'Jupiter octave tone',
+    hz: 183.58,
+    grade: 'A',
+    secondaryGrade: 'D',
+    secondaryScope: 'therapeutic claims',
+    origin: 'Cousto Cosmic Octave: Jupiter orbital period octave-doubled = 183.58 Hz.',
+    citation: 'Cousto tuning-fork tables.',
+    note: 'Arithmetic A; therapy D.',
+  },
+  {
+    id: 'planetary-saturn',
+    name: 'Saturn octave tone',
+    hz: 147.85,
+    grade: 'A',
+    secondaryGrade: 'D',
+    secondaryScope: 'therapeutic claims',
+    origin: 'Cousto Cosmic Octave: Saturn orbital period octave-doubled = 147.85 Hz.',
+    citation: 'Cousto tuning-fork tables.',
+    note: 'Arithmetic A; therapy D.',
+  },
+  {
+    id: 'planetary-sun',
+    name: 'Sun octave tone',
+    hz: 126.22,
+    grade: 'A',
+    secondaryGrade: 'D',
+    secondaryScope: 'therapeutic claims',
+    origin: 'Cousto Cosmic Octave: Sun tone = 126.22 Hz.',
+    citation: 'Cousto tuning-fork tables.',
+    note: 'Arithmetic A; therapy D.',
+  },
+  {
+    id: 'planetary-moon-synodic',
+    name: 'Synodic Moon octave tone',
+    hz: 210.42,
+    grade: 'A',
+    secondaryGrade: 'D',
+    secondaryScope: 'therapeutic claims',
+    origin: 'Cousto Cosmic Octave: synodic month 29.53 d octave-doubled = 210.42 Hz.',
+    citation: 'Cousto tuning-fork tables.',
+    note: 'Arithmetic A; therapy D.',
   },
 
-  // ---------------------------------------------------------- Angel/etc.
+  // ----------------------------------------------------------------- Fibonacci
+  {
+    id: 'fibonacci-phi-set',
+    name: 'Fibonacci / golden-ratio tones',
+    hz: 256,
+    grade: 'D',
+    origin:
+      'Fibonacci sequence (Leonardo of Pisa, Liber Abaci 1202) and phi = 1.618... are real mathematics appearing in phyllotaxis; "Fibonacci tuning forks" are a recent wellness construct.',
+    citation: 'astrionacademy.com Fibonacci tuning-fork page (beliefs only, no trials).',
+    note:
+      'Real math, zero controlled therapeutic evidence; the leap from "ratio appears in shells" to "tone pairs heal" has no proposed mechanism.',
+  },
+
+  // ------------------------------------------------------------ Angel numbers
   {
     id: 'angel-111',
-    name: '"Angel number" 111 Hz',
+    name: 'Angel number 111 Hz',
     hz: 111,
     grade: 'D',
-    origin: 'Numerology social-media trend (2020s); no historical anchor at all.',
-    citation: 'No literature; provenance audit 2026.',
-    note: 'Exhibit only.',
+    origin:
+      'Term "angel numbers" coined ~2005 by New Age author Doreen Virtue via meditation/automatic writing; Virtue has since recanted. The Hz conversion is an even more recent content-farm invention.',
+    citation: 'servantsofgrace.org interview with Doreen Virtue (origin of the term).',
+    note: 'Pure folklore; no historical or scientific basis.',
   },
   {
-    id: 'py-phi',
-    name: 'Golden-ratio interval (φ ≈ 1.618)',
-    hz: 161.8,
+    id: 'angel-222',
+    name: 'Angel number 222 Hz',
+    hz: 222,
     grade: 'D',
-    origin: 'Aesthetic mathematics; the "most beautiful interval" claim is untested.',
-    citation: 'Livio, The Golden Ratio (2002) — documents the myth, does not endorse it.',
-    note: 'Interesting as a sonic-lab interval; claims are folklore.',
+    origin: 'Doreen Virtue "angel numbers" (~2005); Hz conversion is a recent content-farm invention.',
+    citation: 'servantsofgrace.org interview with Doreen Virtue.',
+    note: 'Pure folklore.',
+  },
+  {
+    id: 'angel-444',
+    name: 'Angel number 444 Hz',
+    hz: 444,
+    grade: 'D',
+    origin: 'Doreen Virtue "angel numbers" (~2005); Hz conversion is a recent content-farm invention.',
+    citation: 'servantsofgrace.org interview with Doreen Virtue.',
+    note: 'Pure folklore.',
   },
 
-  // ------------------------------------------------------ EEG band edges
+  // ---------------------------------------------------------- Brainwave bands
   {
     id: 'band-delta',
-    name: 'Delta band (0.5-4 Hz)',
+    name: 'Delta band (deep sleep)',
     band: { minHz: 0.5, maxHz: 4 },
     grade: 'B',
-    origin:
-      'Standard EEG nomenclature (IFCN). Deep NREM slow-wave sleep is genuinely delta-dominant.',
-    citation:
-      'Besedovsky et al., Physiol. Rev. 97:1325-1380 (2017); Rasch & Born, Physiol. Rev. 93:681-766 (2013).',
+    origin: 'Standard EEG band nomenclature (clinical neurophysiology).',
+    citation: 'Ngo et al., Neuron 2013 (closed-loop delta-phase acoustic stimulation enhances slow oscillations).',
     note:
-      'Slow oscillations are real sleep physiology; audio-driven delta entrainment benefits in humans remain unproven.',
+      'Bands are real EEG categories (grade A as taxonomy); grade B for ENTRAINMENT claims — Ingendoh 2023: only 5 of 14 EEG studies support the entrainment hypothesis.',
   },
   {
     id: 'band-theta',
-    name: 'Theta band (4-8 Hz)',
+    name: 'Theta band (drowsiness/meditation)',
     band: { minHz: 4, maxHz: 8 },
     grade: 'B',
-    origin: 'Standard EEG nomenclature; drowsiness, meditation, memory encoding.',
-    citation: 'Klimesch, Brain Res. Rev. 29:169-195 (1999).',
-    note: 'Same physiology-real / entrainment-unproven split as delta.',
+    origin: 'Standard EEG band nomenclature.',
+    citation: 'Garcia-Argibay et al., Psychol Res 2019 (pooled g = 0.45); Ingendoh 2023 (mechanism unproven).',
+    note: 'Behavioral effects modest and heterogeneous; EEG entrainment not consistently supported.',
   },
   {
     id: 'band-alpha',
-    name: 'Alpha band (8-13 Hz)',
+    name: 'Alpha band (relaxed wakefulness)',
     band: { minHz: 8, maxHz: 13 },
     grade: 'B',
-    origin: 'Berger 1929: the first EEG rhythm ever described. Relaxed wakefulness.',
-    citation: 'Berger, Arch. Psychiatr. Nervenkr. 87:527-570 (1929).',
-    note: 'Alpha rises with eyes closed — free, no apparatus needed. Audio claim gap identical.',
+    origin: 'Standard EEG band nomenclature (Berger 1929).',
+    citation: 'Garcia-Argibay 2019; Padmanabhan 2005 (peri-operative anxiety RCT).',
+    note: 'Anxiety-relief evidence is the strongest; entrainment mechanism unproven.',
   },
   {
     id: 'band-smr',
-    name: 'SMR band (12-15 Hz)',
+    name: 'SMR band (sensorimotor rhythm)',
     band: { minHz: 12, maxHz: 15 },
     grade: 'B',
-    origin:
-      'Sensorimotor rhythm; the one entrainment-adjacent paradigm with replicated human biofeedback data (Sterman).',
-    citation: 'Sterman, Clin. Neurophysiol. 111:2101-2107 (2000).',
-    note:
-      'Biofeedback evidence does not transfer automatically to passive audio stimulation — graded on the narrow claim only.',
+    origin: 'Neurofeedback literature (Sterman).',
+    citation: 'JAMA Psychiatry 2024 meta-analysis: neurofeedback effects SMD 0.04 (near-null).',
+    note: 'SMR neurofeedback claims weakened by 2024 meta-analysis; audio-only entrainment evidence weaker still.',
   },
   {
     id: 'band-beta',
-    name: 'Beta band (13-30 Hz)',
+    name: 'Beta band (alert focus)',
     band: { minHz: 13, maxHz: 30 },
     grade: 'B',
-    origin: 'Standard nomenclature; active concentration, motor preparation.',
-    citation: 'Engel & Fries, Curr. Opin. Neurobiol. 20:156-165 (2010).',
-    note: 'Physiology real; passive-audio cognitive benefits unproven.',
+    origin: 'Standard EEG band nomenclature.',
+    citation: 'Basu & Banerjee 2023 (g = 0.40 for memory/attention; frequency-specific claims inconsistent).',
+    note: 'Beta="focus" mapping inconsistent at individual-study level; Klichowski 2023 (n=1000) found 15 Hz beats WORSENED fluid-intelligence scores.',
   },
   {
     id: 'band-gamma',
-    name: 'Gamma band (30-100 Hz)',
+    name: 'Gamma band (binding/cognition)',
     band: { minHz: 30, maxHz: 100 },
     grade: 'B',
-    origin:
-      'Feature binding and attention research; 40 Hz ASSR is a real, well-replicated brainstem/cortical response.',
-    citation:
-      'Galambos et al., PNAS 78:2643-2647 (1981); Herrmann, Int. J. Psychophysiol. 39:41-48 (2001).',
-    note:
-      'ASSR (steady-state response) ≠ the therapeutic "gamma entrainment" claim; the response is measurable, the benefit is not established.',
+    origin: 'Gray & Singer 1989 (stimulus-specific gamma oscillations, cat visual cortex, PNAS).',
+    citation: 'Gray & Singer, PNAS 86:1698-1702 (1989); Iaccarino et al., Nature 2016 (40 Hz mouse).',
+    note: 'Gamma oscillations are real neurophysiology; audio-driven gamma entrainment benefits in humans remain unproven.',
   },
 
   // -------------------------------------------------------------- 432 vs 440
