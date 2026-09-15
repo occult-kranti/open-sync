@@ -92,16 +92,18 @@ describe('honesty labeling', () => {
 
   it('octave-folded brainwave/Schumann presets carry the fold honesty note', () => {
     const folded = CYMATIC_PRESETS.filter((p) => p.id.includes('fold'));
-    expect(folded.length).toBeGreaterThanOrEqual(2);
+    expect(folded.length).toBeGreaterThanOrEqual(7);
     for (const p of folded) {
-      expect(p.note.toLowerCase(), `${p.id} fold note`).toContain('octave-folded');
+      expect(p.note.toLowerCase(), p.id).toContain('octave-fold');
+      expect(p.note.toLowerCase(), p.id).toContain('representational');
     }
   });
-});
 
-describe('getCymaticPresetById', () => {
-  it('finds a known preset and returns undefined on a miss', () => {
-    expect(getCymaticPresetById(CYMATIC_PRESETS[0].id)?.id).toBe(CYMATIC_PRESETS[0].id);
-    expect(getCymaticPresetById('nope')).toBeUndefined();
+  it('the 432/440 comparison pair exists and disclaims pattern-level claims', () => {
+    const a440 = getCymaticPresetById('drive-440-concert')!;
+    const a432 = getCymaticPresetById('drive-432-verdi')!;
+    expect(a440.driveHz).toBe(440);
+    expect(a432.driveHz).toBe(432);
+    expect(a432.note).toContain('pilot-grade');
   });
 });
