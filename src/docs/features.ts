@@ -72,7 +72,7 @@ export const APP_SCREENS: readonly { route: string; label: string }[] = [
 ] as const;
 
 const FEATURES_CORE: readonly FeatureEntry[] = [
-  // ---------------------------------------------------------------- Home / Guide
+  // ------------------------------------------------------------- Home / Guide
   {
     id: 'home-landing',
     module: 'Home',
