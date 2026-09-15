@@ -86,8 +86,8 @@ describe('medical registry integrity', () => {
 
   it('folklore devices never carry cure language without a negation', () => {
     for (const d of MED_DEVICES.filter((x) => x.kind === 'folklore')) {
-      // Strip the cited Lynes book title \u2014 a proper noun, not a claim we make.
-      const text = allText(d.name, d.status, d.summary).replace(/[\u201c"]the cancer cure that worked[\u201d"]/g, '');
+      // Strip the cited Lynes book title — a proper noun, not a claim we make.
+      const text = allText(d.name, d.status, d.summary).replace(/[“"]the cancer cure that worked[”"]/g, '');
       for (const re of OVERCLAIM) {
         expect(re.test(text), `${d.id} cure-language check`).toBe(false);
       }
