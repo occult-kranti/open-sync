@@ -1,93 +1,128 @@
 /**
- * Quick Lab self-test protocol types (S20.1).
+ * Quick Lab — shared types for the blinded n-of-1 self-experiment runner.
  *
- * The page + engine run blinded n-of-1 self-experiments: seeded,
- * block-randomized schedules whose arm assignment is logged (seed) but
- * never revealed until the protocol completes; post-session sliders and an
- * optional 60 s reaction tap test; results render ONLY as n + estimate +
- * 95% CI with the honesty gates. These types are the contract.
+ * Protocols are distilled from the T1 fast-test matrix
+ * (research/deep_theory_edge_cases.md, Part 5) and the G10 experiment
+ * registry (research/experiment_registry.md, X01–X14).
+ *
+ * Language discipline (registry rule 2 / Advisor S12.2): every user-facing
+ * string uses hedged wording ("biases toward", "is associated with");
+ * "induces", "synchronizes", "attunes", "CIA-validated", "digital drug" are
+ * banned and enforced by the claim lint in src/quicklab/__tests__.
+ *
+ * Blinding model (S20.1): the session log stores only opaque condition
+ * codes. The code→arm mapping (the "sealed key") is fixed at enrollment by
+ * a logged seed and is revealed only after the protocol completes.
  */
 
-import type { NoiseColor, Phase } from '@/engine';
+import type { Phase } from '@/engine';
 
-export type { Phase, NoiseColor };
+/** All Quick Lab arms are fully blinded until protocol completion. */
+export type Blinding = 'full';
 
-/** One playable condition of a self-test protocol. */
+/** Safety class per audio-protocol-design SKILL (experimental ⇒ explicit opt-in). */
+export type SafetyClass = 'adult' | 'experimental';
+
+/**
+ * One arm of a protocol. `id` and `description` are SEALED material: they
+ * must never appear in the blinded session log or in pre-completion UI.
+ * Only `code` (an opaque label derived from the enrollment seed) is visible
+ * while the protocol is running.
+ */
 export interface ArmSpec {
-  /** Stable opaque id (never shown pre-completion). */
+  /**
+   * Sealed arm identity, e.g. 'veridical' | 'sham-active' | 'control-0hz'.
+   * Never rendered before completion.
+   */
   id: string;
-  /** Post-completion user-facing description (sealed until reveal). */
+  /** Sealed plain-language description, revealed after completion. */
   description: string;
   /**
-   * The engine render spec for this arm. Exactly one phase for v1
-   * (single-session protocols); the runner configures the session engine
-   * from phases[0].
+   * Session stimulus mapped to the engine Phase shape (src/engine/types.ts).
+   * Rendered through the live session engine; all levels respect the
+   * audio-protocol-design hard limits (binaural carrier ≤ ~1 kHz,
+   * |Δf| ≤ ~30 Hz for percept-bearing arms, ≤ −1 dBTP ceiling).
    */
   phases: Phase[];
-  /** Onset ramp (seconds) applied by the runner before playback. */
-  attackSec: number;
   /**
-   * When true the runner swaps L/R at playback time (H9 ear-swap).
-   * Identity lives here, NOT in the session log.
+   * Onset ramp in seconds for the phase plan (H3-style envelope ergonomics
+   * parameter; recorded in the render manifest). 10 s = slow ritual ramp,
+   * 0.01 s = near-abrupt onset (discomfort arm).
+   */
+  attackSec: number;
+  /** Sealed citation note for the arm construction (e.g. "X05 sham: 7.37 Hz"). */
+  constructionNote: string;
+  /**
+   * H9 ear-swap flag: play the phase plan with L/R assignments exchanged
+   * (rendered as carrierHz+beatHz on the left, −beatHz on the right), which
+   * reverses the perceived rotation direction while leaving the rate intact.
    */
   channelSwap?: boolean;
-  /** Post-completion construction note (shown at reveal). */
-  constructionNote?: string;
 }
 
-/** A post-session slider. */
+/** A 1–7 (or wider) post-session self-report scale. */
 export interface OutcomeScale {
   id: string;
+  /** Short label, e.g. "Calm". */
   label: string;
+  /** Anchor text for the low end. */
   lowAnchor: string;
+  /** Anchor text for the high end. */
   highAnchor: string;
   min: number;
   max: number;
 }
 
-/** Screening / opt-in item shown before enrollment. */
-export interface ScreeningItem {
-  id: string;
-  prompt: string;
-  /** 'acknowledge' requires a checked box; 'info' is display-only. */
-  kind: 'acknowledge' | 'info';
+/** Which two arms the primary n-of-1 contrast compares (indices into arms). */
+export interface PrimaryContrast {
+  /** "Treatment-like" arm index. */
+  a: number;
+  /** "Control-like" arm index. */
+  b: number;
+  /** Hedged plain-language description of the contrast, e.g. "sessions with arm A vs arm B on calm+focus". */
+  label: string;
 }
 
 export interface QuickLabProtocol {
   id: string;
   title: string;
-  /** Matrix hypothesis id (H1/H3/H4/H5/H9/H10/H12…). */
+  /** T1 hypothesis id (H1–H12 from deep_theory_edge_cases.md Part 4). */
   hypothesisId: string;
-  /** Registry experiments this n-of-1 run shadows (e.g. X05). */
+  /** Registry experiments this protocol cheaply proxies (X01–X14). */
   registryLinks: string[];
-  /** User-facing question (safe to show pre-completion — describes the design, not the assignment). */
+  /** The falsifiable question, hedged. */
   question: string;
-  /** Mundane-alternative summary (the thing the protocol must beat). */
+  /** What a mundane (ritual/expectancy/noise) model predicts — the ledger entry to beat. */
   mundaneModel: string;
   arms: ArmSpec[];
-  /** Indices into `arms` for the pre-registered primary contrast (a − b). */
-  primaryContrast: { a: number; b: number; label: string };
+  primaryContrast: PrimaryContrast;
+  /** Outcome scales collected after every session (calm/focus are mandatory). */
   outcomeScales: OutcomeScale[];
-  /** Include the optional 60 s reaction tap test. */
+  /** Whether the optional 60 s reaction-time tap test is offered. */
   tapTest: boolean;
-  /** Minimum sessions before any estimate renders (hard floor: 10). */
+  /** Honesty gate: no verdict below this many completed sessions. */
   minSessions: number;
-  /** Blinding mode — v1 ships only full (assignment hidden until completion). */
-  blinding: 'full';
-  /** Safety class (adult default; experimental for ramp-discomfort). */
-  safetyClass: 'adult' | 'experimental';
-  /** Planned session length in minutes (dose accounting + display). */
+  blinding: Blinding;
+  safetyClass: SafetyClass;
+  /** Session length in minutes (dose accounting uses this). */
   sessionMinutes: number;
-  screening: ScreeningItem[];
-  /** Honest power note (group-scale + n-of-1). */
+  /** Screening questions shown at enrollment (before schedule generation). */
+  screening: { id: string; prompt: string; kind: 'yes-no' | 'acknowledge' }[];
+  /**
+   * Power note (Advisor gate #12 corrected): what group-scale N the same
+   * question would need; the n-of-1 run is an estimation exercise, never a
+   * confirmatory test.
+   */
   powerNote: string;
-  /** Priority / ratified-order note. */
+  /** One-line "why this first/why at all" from the T1 priority ordering. */
   priorityNote: string;
 }
 
-/** Citation entry for protocol cards (Zhao 2025 must carry its confidence tag). */
+/** Confidence tag for citations (Advisor gate #12: Zhao 2025 is low-medium). */
+export type CitationConfidence = 'high' | 'medium' | 'low-medium';
+
 export interface ProtocolCitation {
   label: string;
   url?: string;
-  confidence?: 'high' | 'medium' | 'low-medium';
+  confidence?: CitationConfidence;
 }
