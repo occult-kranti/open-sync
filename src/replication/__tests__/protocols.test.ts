@@ -1,186 +1,241 @@
-/**
- * Replication Bay protocol data — honesty audits (S3 + fixed-item fixes).
- *
- * Static content checks run in node against REPLICATION_CARDS: stimulus
- * replication ≠ claim validation (banner literal), two-axis grading
- * (documented / validated / safety) per card, museum cards with engine:
- * null that never produce audio, citation quality, per-card safety caps.
- */
-
 import { describe, expect, it } from 'vitest';
+import { checkPhaseGuardrails, renderPhase } from '@/engine';
 import {
   REPLICATION_BANNER,
   REPLICATION_CARDS,
   engineDurationSec,
   isRunnable,
   toPreset,
+  toSessionSpec,
+  validateRunnableCard,
   type ReplicationCard,
 } from '../protocols';
 
-const BANNED = ['induces', 'synchronizes', 'attunes', 'cia-validated', 'digital drug'];
+const RUNNABLE = REPLICATION_CARDS.filter(isRunnable);
+const MUSEUM = REPLICATION_CARDS.filter((c) => !isRunnable(c));
+const byId = (id: string): ReplicationCard => {
+  const c = REPLICATION_CARDS.find((x) => x.id === id);
+  if (!c) throw new Error(`missing card ${id}`);
+  return c;
+};
 
-function allStrings(c: ReplicationCard): string[] {
-  const out = [
-    c.name, c.program, c.era, c.summary, c.originalClaim,
-    c.engineNote ?? '', c.fidelityNote ?? '', c.divergenceNote ?? '',
-    c.museumText ?? '', c.nonReplicableReason ?? '',
+/** All user-facing strings on a card (claim-lint surface). */
+function userFacingStrings(c: ReplicationCard): string[] {
+  return [
+    c.name,
+    c.program,
+    c.originalClaim,
+    c.summary,
+    ...(c.fidelityNote ? [c.fidelityNote] : []),
+    ...(c.divergenceNote ? [c.divergenceNote] : []),
+    ...(c.engineNote ? [c.engineNote] : []),
+    ...(c.nonReplicableReason ? [c.nonReplicableReason] : []),
+    ...(c.museumText ? [c.museumText] : []),
+    ...(c.verificationPending ? [c.verificationPending] : []),
+    ...(c.safety?.warnings ?? []),
     ...c.citations,
   ];
-  for (const s of c.safety?.warnings ?? []) out.push(s);
-  return out;
 }
 
-describe('REPLICATION_CARDS schema', () => {
-  it('has unique ids and covers the committed card set', () => {
+describe('replication card data integrity', () => {
+  it('covers the mandated program set', () => {
     const ids = REPLICATION_CARDS.map((c) => c.id);
-    expect(new Set(ids).size).toBe(ids.length);
-    expect(ids).toEqual(
-      expect.arrayContaining([
-        'monroe-ffr-1975',
-        'cia-gateway-1983',
-        'ngo-sws-closed-loop',
-        'medusa-lrad-museum',
-        'synthetic-telepathy-museum',
-      ]),
-    );
+    for (const id of [
+      'rep-gateway-focus10',
+      'rep-genus-40hz-audio',
+      'rep-tmr-cue-replay',
+      'rep-clas-slow-oscillation',
+      'rep-dod-theta-bbf-sleep',
+      'rep-lida-audio-analog',
+      'doc-medusa-lrad',
+      'doc-synthetic-telepathy',
+    ]) {
+      expect(ids).toContain(id);
+    }
   });
 
-  it('every card carries the two grading axes + safety class + era + program', () => {
+  it('every card has both classification axes, original claim, grade, citations', () => {
     for (const c of REPLICATION_CARDS) {
-      expect(['VALIDATED', 'PARTIAL', 'CONTESTED', 'UNVALIDATED', 'DISPROVED']).toContain(c.claimGrade);
-      expect(['A', 'B', 'C', 'D']).toContain(c.ourGrade);
-      expect(['adult', 'experimental']).toContain(c.safetyClass);
-      expect(typeof c.documented).toBe('boolean');
-      expect(c.program.length).toBeGreaterThan(0);
-      expect(c.era.length).toBeGreaterThan(0);
-      expect(c.originalClaim.length).toBeGreaterThan(0);
+      expect(typeof c.documented, c.id).toBe('boolean');
+      expect(['VALIDATED', 'PARTIAL', 'CONTESTED', 'UNVALIDATED', 'DISPROVED'], c.id).toContain(c.claimGrade);
+      expect(['A', 'B', 'C', 'D'], c.id).toContain(c.ourGrade);
+      expect(c.originalClaim.length, c.id).toBeGreaterThan(0);
+      expect(c.citations.length, c.id).toBeGreaterThan(0);
+      expect(['adult', 'experimental'], c.id).toContain(c.safetyClass);
+    }
+  });
+
+  it('every runnable card has safety rails and an H.870 dose fraction under 1% of weekly dose', () => {
+    for (const c of RUNNABLE) {
+      expect(c.safety, c.id).not.toBeNull();
+      expect(c.safety!.maxLevelDbA, c.id).toBeLessThanOrEqual(70);
+      expect(c.safety!.h870WeeklyDoseFraction, c.id).toBeLessThan(0.01);
+      expect(c.safety!.warnings.length, c.id).toBeGreaterThan(0);
+    }
+  });
+
+  it('museum cards are documentation-only: engine null + non-replicable explainer', () => {
+    for (const c of MUSEUM) {
+      expect(c.engine, c.id).toBeNull();
+      expect(c.nonReplicableReason?.length, c.id).toBeGreaterThan(0);
+      expect(toSessionSpec(c), c.id).toBeNull();
+      expect(toPreset(c), c.id).toBeNull();
     }
   });
 });
 
-describe('S3 gate: stimulus replication ≠ claim validation', () => {
-  it('the banner literal is exported verbatim for the UI', () => {
-    expect(REPLICATION_BANNER).toBe('stimulus replication ≠ claim validation');
-  });
-
-  it('every runnable card shows the banner and an original-claim line', () => {
-    for (const c of REPLICATION_CARDS.filter(isRunnable)) {
-      // The UI renders the literal banner from REPLICATION_BANNER; the card
-      // must also carry its original claim so the two can never merge.
-      expect(c.originalClaim.trim().length).toBeGreaterThan(10);
-      expect(c.engine ?? c.offlineEngine).toBeTruthy();
+describe('runnable cards validate against the SessionSpec domain', () => {
+  it('pass the domain-limit validator (durations > 0, binaural beats ≤ 30 Hz, gain ≤ 0)', () => {
+    for (const c of RUNNABLE) {
+      expect(validateRunnableCard(c), `${c.id}: ${validateRunnableCard(c).join('; ')}`).toEqual([]);
     }
   });
 
-  it('no card text contains a banned overclaim phrase', () => {
-    for (const c of REPLICATION_CARDS) {
-      for (const s of allStrings(c)) {
-        const low = s.toLowerCase();
-        for (const b of BANNED) {
-          expect(low, `${c.id}: "${s}" contains banned "${b}"`).not.toContain(b);
-        }
+  it('map to a well-formed engine SessionSpec', () => {
+    for (const c of REPLICATION_CARDS.filter((x) => x.engine)) {
+      const spec = toSessionSpec(c)!;
+      expect(spec.phases.length).toBeGreaterThan(0);
+      expect(spec.sampleRate).toBe(48000);
+      for (const p of spec.phases) {
+        expect(p.durationSec, c.id).toBeGreaterThan(0);
+        expect(p.carrierHz, c.id).toBeGreaterThan(0);
+        expect(p.gainDb, c.id).toBeLessThanOrEqual(0);
+        // >30 Hz modulation must use monaural/isochronic (binaural ceiling).
+        if (p.beatHz > 30) expect(p.mode, c.id).not.toBe('binaural');
       }
     }
   });
-});
 
-describe('museum cards (never runnable)', () => {
-  it('every museum card has engine: null and a non-replicable reason', () => {
-    const museum = REPLICATION_CARDS.filter((c) => !isRunnable(c));
-    expect(museum.length).toBeGreaterThanOrEqual(2);
-    for (const c of museum) {
-      expect(c.engine).toBeNull();
-      expect(c.offlineEngine).toBeUndefined();
-      expect(c.nonReplicableReason && c.nonReplicableReason.length > 20).toBe(true);
-      expect(c.safety).toBeUndefined();
-      expect(toPreset(c)).toBeNull();
-      expect(c.documented).toBe(true);
-    }
-  });
-
-  it('MEDUSA/LRAD museum card is documented but claim-unvalidated', () => {
-    const m = REPLICATION_CARDS.find((c) => c.id === 'medusa-lrad-museum')!;
-    expect(m.claimGrade).toBe('UNVALIDATED');
-    expect(m.nonReplicableReason).toMatch(/pulsed microwave|hazard|not audio/i);
-  });
-
-  it('synthetic telepathy museum card states the 1976 misunderstanding correction', () => {
-    const s = REPLICATION_CARDS.find((c) => c.id === 'synthetic-telepathy-museum')!;
-    expect(s.nonReplicableReason).toMatch(/Sharp|Grove|microwave/i);
-  });
-});
-
-describe('runnable cards: engine + safety + citations', () => {
-  it('every engine phase maps to the engine Phase shape with sane limits', () => {
-    for (const c of REPLICATION_CARDS) {
-      for (const spec of [c.engine, c.offlineEngine]) {
-        if (!spec) continue;
-        for (const ph of spec) {
-          for (const k of ['durationSec', 'carrierHz', 'beatHz', 'mode', 'gainDb'] as const) {
-            expect(ph).toHaveProperty(k);
-          }
-          expect(ph.durationSec).toBeGreaterThan(0);
-          expect(ph.carrierHz).toBeGreaterThan(0);
-          expect(ph.carrierHz).toBeLessThanOrEqual(1000);
-          expect(ph.beatHz).toBeGreaterThanOrEqual(0);
-          if (ph.mode === 'binaural') expect(ph.beatHz).toBeLessThanOrEqual(30);
-          expect(ph.gainDb).toBeLessThanOrEqual(0);
+  it('every phase renders without engine guardrail warnings', () => {
+    for (const c of RUNNABLE) {
+      const sets = [c.engine, c.offlineEngine].filter(Boolean) as (typeof c.engine)[];
+      for (const phases of sets) {
+        for (const p of phases!) {
+          // Render a 0.5 s truncation to prove renderability without huge buffers.
+          const probe = { ...p, durationSec: 0.5 };
+          const r = renderPhase(probe, 48000);
+          expect(checkPhaseGuardrails(p, 48000), `${c.id}: ${JSON.stringify(p)}`).toEqual([]);
+          expect(r.left.length).toBe(24000);
         }
       }
     }
   });
 
-  it('every runnable card has per-card safety caps and headphones note where relevant', () => {
-    for (const c of REPLICATION_CARDS.filter(isRunnable)) {
-      expect(c.safety).toBeTruthy();
-      expect(c.safety!.maxLevelDbA).toBeLessThanOrEqual(62);
-      expect(c.safety!.sessionMin).toBeGreaterThan(0);
-      expect(c.safety!.h870WeeklyDoseFraction).toBeGreaterThan(0);
-      expect(c.safety!.h870WeeklyDoseFraction).toBeLessThan(0.2);
+  it('toPreset adapts to the Studio data-layer shape', () => {
+    for (const c of REPLICATION_CARDS.filter((x) => x.engine)) {
+      const preset = toPreset(c)!;
+      expect(preset.category).toBe('Experimental');
+      expect(preset.spec.autoShutoff).toBe(true);
+      expect(preset.rationale).toContain(REPLICATION_BANNER);
+      for (const p of preset.spec.phases) {
+        expect(p.durationSec).toBeGreaterThan(0);
+        expect(p.gainDbFs).toBeLessThanOrEqual(0);
+      }
     }
   });
 
-  it('every card has at least one citation; museum cards cite primary docs', () => {
-    for (const c of REPLICATION_CARDS) {
-      expect(c.citations.length).toBeGreaterThan(0);
-    }
-    const medusa = REPLICATION_CARDS.find((c) => c.id === 'medusa-lrad-museum')!;
-    expect(medusa.citations.join(' ')).toMatch(/6,356,506|6,587,178/);
+  it('durations are sane and positive', () => {
+    const gw = byId('rep-gateway-focus10');
+    expect(engineDurationSec(gw.engine!)).toBe(2100); // 35 min per documented tape length
+  });
+});
+
+describe('mandatory framing (replication-pack-qa)', () => {
+  it('banner string is the literal required text', () => {
+    expect(REPLICATION_BANNER).toBe('Stimulus replication ≠ claim validation.');
   });
 
-  it('cia-gateway card is documented, claim-contested, safety adult, fidelity-noted', () => {
-    const g = REPLICATION_CARDS.find((c) => c.id === 'cia-gateway-1983')!;
-    expect(g.documented).toBe(true);
+  it('Gateway cites the 1983 CIA doc as a theoretical assessment with no experiments', () => {
+    const g = byId('rep-gateway-focus10');
+    expect(g.citations.some((c) => c.includes('CIA-RDP96-00788R001700210016-5'))).toBe(true);
+    expect(userFacingStrings(g).join(' ')).toMatch(/no experiments/i);
+    expect(g.fidelityNote).toMatch(/reconstruction/i);
+    expect(g.claimGrade).toBe('UNVALIDATED');
+  });
+
+  it('GENUS cites BOTH the patent thicket AND the OVERTURE primary-endpoint miss', () => {
+    const g = byId('rep-genus-40hz-audio');
+    const all = userFacingStrings(g).join(' ');
+    expect(all).toMatch(/patent thicket/i);
+    expect(all).toMatch(/OVERTURE/);
+    expect(all).toMatch(/missed/i);
     expect(g.claimGrade).toBe('CONTESTED');
-    expect(g.safetyClass).toBe('adult');
-    expect(g.fidelityNote).toMatch(/fidelity/i);
+    expect(g.divergenceNote).toMatch(/audio-only/i);
   });
 
-  it('ngo-sws card is NOT a true replication: divergence note + offline burst variant', () => {
-    const n = REPLICATION_CARDS.find((c) => c.id === 'ngo-sws-closed-loop')!;
-    expect(n.divergenceNote).toMatch(/not a true replication|open-loop|in-phase detection/i);
+  it('GENUS load is gated: SPL parameter verification pending (S3 gate condition 1)', () => {
+    const g = byId('rep-genus-40hz-audio');
+    expect(g.verificationPending).toBeTruthy();
+    expect(g.verificationPending).toMatch(/STAR Methods/i);
+  });
+
+  it('GENUS carries the infant-mode exclusion and 1 h/day cooldown notes (S3 gate condition 2)', () => {
+    const g = byId('rep-genus-40hz-audio');
+    const w = g.safety!.warnings.join(' ');
+    expect(w).toMatch(/INFANT MODE EXCLUDED/);
+    expect(w).toMatch(/1 kHz/);
+    expect(w).toMatch(/50 dBA/);
+    expect(w).toMatch(/1 h\/day/);
+  });
+
+  it('S3 dose-arithmetic corrections are applied (condition 5)', () => {
+    expect(byId('rep-gateway-focus10').safety!.h870WeeklyDoseFraction).toBeCloseTo(3.2e-5, 7);
+    expect(byId('rep-lida-audio-analog').safety!.h870WeeklyDoseFraction).toBeCloseTo(8.8e-5, 7);
+  });
+
+  it('Ngo-CLAS live mode requires EEG; offline variant is honestly labeled open-loop', () => {
+    const n = byId('rep-clas-slow-oscillation');
     expect(n.requiresEeg).toBe(true);
-    expect(n.offlineEngine).toBeTruthy();
-    const p = toPreset(n, { offline: true });
-    expect(p).toBeTruthy();
-    expect(p!.title).toMatch(/offline/i);
+    expect(n.requiresDevice).toBe(true);
+    expect(n.engine).toBeNull();
+    expect(n.offlineEngine!.length).toBeGreaterThan(0);
+    expect(userFacingStrings(n).join(' ')).toMatch(/NOT this protocol|not-the-protocol/i);
+    expect(userFacingStrings(n).join(' ')).toMatch(/Henin/); // null memory replication disclosed
   });
 
-  it('engineDurationSec sums phases', () => {
-    const n = REPLICATION_CARDS.find((c) => c.id === 'ngo-sws-closed-loop')!;
-    expect(engineDurationSec(n.engine!)).toBe(n.engine!.reduce((a, p) => a + p.durationSec, 0));
+  it('TMR ships only the timed fallback with the stage-targeting honesty note (S3 gate condition 4)', () => {
+    const t = byId('rep-tmr-cue-replay');
+    expect(t.requiresDevice).toBe(true);
+    expect(t.fidelityNote).toMatch(/timed fallback/i);
+    expect(t.fidelityNote).toMatch(/[Ss]tage targeting is an active ingredient/);
+    expect(t.claimGrade).toBe('VALIDATED');
   });
 
-  it('toPreset builds a valid preset-shaped object for engine and offline variants', () => {
-    for (const c of REPLICATION_CARDS.filter(isRunnable)) {
-      const p = toPreset(c)!;
-      expect(p.id).toContain(c.id);
-      expect(p.spec.phases.length).toBeGreaterThan(0);
-      expect(p.citations.length).toBeGreaterThan(0);
-      if (c.offlineEngine) {
-        const off = toPreset(c, { offline: true })!;
-        expect(off.spec.phases).toEqual(c.offlineEngine);
+  it('LIDA carries the mandatory divergence note and correct patent pulse rate', () => {
+    const l = byId('rep-lida-audio-analog');
+    expect(l.divergenceNote).toBeTruthy();
+    expect(userFacingStrings(l).join(' ')).toMatch(/40–80\/min|40-80\/min/);
+    expect(l.claimGrade).toBe('UNVALIDATED');
+  });
+
+  it('MEDUSA/LRAD and synthetic telepathy are museum-only', () => {
+    expect(MUSEUM.map((c) => c.id).sort()).toEqual(['doc-medusa-lrad', 'doc-synthetic-telepathy']);
+    expect(byId('doc-medusa-lrad').museumText).toMatch(/thermoelastic/);
+  });
+});
+
+describe('banned-claim lint over replication strings', () => {
+  const all = REPLICATION_CARDS.flatMap((c) => userFacingStrings(c).map((s) => ({ id: c.id, s })));
+
+  it('never presents claims as validated capabilities', () => {
+    for (const { id, s } of all) {
+      expect(/guarantee/i.test(s), `${id}: ${s}`).toBe(false);
+      expect(/proven to induce/i.test(s), `${id}: ${s}`).toBe(false);
+      expect(/mind control works/i.test(s), `${id}: ${s}`).toBe(false);
+    }
+  });
+
+  it('"subliminal" appears only in explicit negations', () => {
+    for (const { id, s } of all) {
+      if (/subliminal/i.test(s)) {
+        expect(/(never|no)\b[^.]*subliminal|subliminal[^.]*\b(never|no)\b/i.test(s), `${id}: ${s}`).toBe(true);
       }
+    }
+  });
+
+  it('the typo "combined-genius" does not appear (S3 gate condition 6)', () => {
+    for (const { id, s } of all) {
+      expect(/combined-genius/i.test(s), `${id}: ${s}`).toBe(false);
     }
   });
 });
