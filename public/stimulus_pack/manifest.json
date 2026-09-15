@@ -1,0 +1,368 @@
+{
+  "pack": "Open Sync stimulus pack (W5 render subset)",
+  "spec": "stimulus_pack_spec.md v1.0",
+  "scope": "X10 reference set only \u2014 all other files on-demand regeneration from spec",
+  "rendered_by": "W5 inline renderer (numpy/scipy float64, 24-bit PCM, TPDF 1 LSB, 2 Hz highpass, raised-cosine fades)",
+  "files": [
+    {
+      "file": "ospx_x10_bb_c250_d2_10s.wav",
+      "sha256": "a8fb8254b3ac17b656c08df444baa7f816d824fbf2e594fa021b988a036856b9",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 250.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 252.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c250_d5_10s.wav",
+      "sha256": "5b787d3db67ea91510af9aba79b6be442d464c539c3d3cea1e71cefd111c2038",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 250.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 255.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c250_d10_10s.wav",
+      "sha256": "44384eae721b67c7f761254fe53b80da629f6ffae95392f2a3ac80d66ebb5a85",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 250.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 260.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c250_d20_10s.wav",
+      "sha256": "9f60801c17d0c1e5208a733b7bb41196d2f3fd89af0257e5bbef8cf26d7162e9",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 250.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 270.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c250_d30_10s.wav",
+      "sha256": "bb784e8cb394504d2991643759deda83592a32ed05abacb85a70711059c95f4c",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 250.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 280.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c400_d2_10s.wav",
+      "sha256": "11b6b704ecfad9b9f84129694a15ce0ca498284fca5a485a4a2f62e8385ca544",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 400.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 402.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c400_d5_10s.wav",
+      "sha256": "1a37ffd6de5c98e73004a0368970a92a9af58b3664f176cafe0b04c42c460155",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 400.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 405.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c400_d10_10s.wav",
+      "sha256": "8fb35a43f0a063cfaad3fc2c6723ddc47ecee9c54e0ed83d17c8671986c0b737",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 400.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 410.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c400_d20_10s.wav",
+      "sha256": "ca0f38ec3666ca04bb38d19649eaa0edf271b6d3c0b8ce89808f817a51623277",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 400.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 420.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c400_d30_10s.wav",
+      "sha256": "82500eccc5630c63f5c7e19c9c879b75fe17f98d069295572cb5941b42411cd9",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 400.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 430.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c500_d2_10s.wav",
+      "sha256": "dcb758dce40f7cb5a7ad27813349859220052c75be8017a3ba5bd8165b650d43",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 500.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 502.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c500_d5_10s.wav",
+      "sha256": "08eb1d921a48093cd004285ff05de2c5938387902ce0181a3abb08f36220d9be",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 500.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 505.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c500_d10_10s.wav",
+      "sha256": "1826955b818aff0bff93c619608cf0f8b0c387258752211d5e17487e80d38b79",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 500.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 510.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c500_d20_10s.wav",
+      "sha256": "7977df17534a97d06040af8623dfe6081707da82a67895e46df387dfafbda391",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 500.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 520.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c500_d30_10s.wav",
+      "sha256": "278468d3fa52dd2d21f1ca2b791fdd554de2f12036d79403e63e2a5e38c753d7",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 500.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 530.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c1000_d2_10s.wav",
+      "sha256": "be5330ff60bc286a794a9f9cad2484566084a48f942a9783f3a6c58222483243",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 1000.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 1002.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c1000_d5_10s.wav",
+      "sha256": "9376f7904cd0048d561f9812d6dbbbb5031e37280c0d786f2b668c8e9d53787b",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 1000.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 1005.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c1000_d10_10s.wav",
+      "sha256": "4cb527052eddcc849308bec69e552674bd99f36f8eaa7bfee05aeee76e4c24a4",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 1000.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 1010.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c1000_d20_10s.wav",
+      "sha256": "180db1dc2fd9db0bb9b7954a159e1b653d82e285d4a3ef7598382bd39c65445f",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 1000.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 1020.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    },
+    {
+      "file": "ospx_x10_bb_c1000_d30_10s.wav",
+      "sha256": "4827a3184d39042ec74aa59eeaffeba0e8b9908a3ddbcd2d7e7e88905920f95b",
+      "sample_rate": 48000,
+      "bit_depth": 24,
+      "duration_s": 10.0,
+      "channels": {
+        "L": "sine 1000.000 Hz @ -23.0 dBFS RMS",
+        "R": "sine 1030.000 Hz @ -23.0 dBFS RMS"
+      },
+      "rng_seed": 20260211,
+      "loop_seamless": false,
+      "serves_protocols": [
+        "X10"
+      ],
+      "render_spec_version": "1.0",
+      "size_bytes": 2880044
+    }
+  ]
+}
