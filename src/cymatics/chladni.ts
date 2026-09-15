@@ -381,7 +381,7 @@ export const VIRTUAL_PLATES: readonly VirtualPlate[] = [
   },
   {
     id: 'steel-disc-17',
-    label: 'STEEL DISC ⌀17 CM',
+    label: 'STEEL DISC Ø17 CM',
     shape: 'circular',
     material: 'lacquered steel, 0.5 mm',
     fundamentalHz: 110,
