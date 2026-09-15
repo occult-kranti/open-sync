@@ -217,7 +217,7 @@ export default function Analyzer() {
           >
             {(['engine', 'file', 'mic'] as Source[]).map((s2) => (
               <Chip key={s2} active={source === s2} onClick={() => setSource(s2)}>
-                {s2 === 'engine' ? 'ENGINE BUS' : s2 === 'file' ? 'LIVE INPUT' : 'LIVE INPUT'}
+                {s2 === 'engine' ? 'ENGINE BUS' : s2 === 'file' ? 'FILE' : 'LIVE INPUT'}
               </Chip>
             ))}
           </div>
