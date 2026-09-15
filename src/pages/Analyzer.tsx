@@ -33,7 +33,7 @@ interface FileData {
 }
 
 const fmt = (v: number, digits = 1, unit = '') =>
-  Number.isFinite(v) ? `${v.toFixed(digits)}${unit ? ` ${unit}` : ''}` : '—';
+  Number.isFinite(v) ? `${v.toFixed(digits)}${unit ? ` ${unit}` : ''}` : '—';
 
 export default function Analyzer() {
   const { engineRef, running, carrierHz, beatHz, mode, volumeDb, estDbA, dosePercent } = useSession();
@@ -217,7 +217,7 @@ export default function Analyzer() {
           >
             {(['engine', 'file', 'mic'] as Source[]).map((s2) => (
               <Chip key={s2} active={source === s2} onClick={() => setSource(s2)}>
-                {s2 === 'engine' ? 'ENGINE BUS' : s2 === 'file' ? 'FILE' : 'LIVE INPUT'}
+                {s2 === 'engine' ? 'ENGINE BUS' : s2 === 'file' ? 'LIVE INPUT' : 'LIVE INPUT'}
               </Chip>
             ))}
           </div>
@@ -312,7 +312,7 @@ export default function Analyzer() {
             <div className="t-readout-lg" style={{ color: 'var(--amber)' }}>
               {loud ? fmt(loud.integrated, 1) : '—'}
               <span className="text-3" style={{ fontSize: '0.5em' }}>
-                {' '}LUFS-I
+                {' '}LUFS-I
               </span>
             </div>
             <p className="t-caption text-3" style={{ margin: '4px 0 16px' }}>
