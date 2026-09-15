@@ -1,0 +1,271 @@
+{
+  "version": 1,
+  "sampleRate": 48000,
+  "format": "pcm16-stereo",
+  "seconds": 6,
+  "targetSeconds": 12,
+  "note": "per-file duration auto-reduced 12s → 6s to keep the total under 60 MB",
+  "files": [
+    {
+      "id": "sleep-delta-descent",
+      "sha256": "6a51dac8028ea40bd68aabb7ce690cc4b83ad94ca6011873802ac64c1ef189ff",
+      "bytes": 1152044
+    },
+    {
+      "id": "sleep-slow-wave-cue",
+      "sha256": "3666b9f3917d891a17c9eb8fab62d6e0663ede9c1502b35cb1517d9cae01b313",
+      "bytes": 1152044
+    },
+    {
+      "id": "sleep-theta-drift",
+      "sha256": "7a21fed217785c1e40f5730586446aa1442dfc78bcb73cd0ac337afde49284f3",
+      "bytes": 1152044
+    },
+    {
+      "id": "sleep-pink-quiet",
+      "sha256": "33ab2c3e8cc2d9af895f4a44862d78aa10dbd5ca107a002185336d0fb2576479",
+      "bytes": 1152044
+    },
+    {
+      "id": "focus-smr",
+      "sha256": "6a5dd9ee94b9f3936d05af5bf6c6c6af4498d9c5c0732938a69d733e740eaca9",
+      "bytes": 1152044
+    },
+    {
+      "id": "focus-beta-block",
+      "sha256": "0a0f1f61c435a2b606f7cb2284111cb299c6379ceba6b07ca28761fb0c4bfa9e",
+      "bytes": 1152044
+    },
+    {
+      "id": "focus-pomodoro",
+      "sha256": "e4ce22f94eab752952bc4a0cd6100349ab969796823e229e2322a96c899e2a57",
+      "bytes": 1152044
+    },
+    {
+      "id": "focus-alpha-flow",
+      "sha256": "5fd561ab3149085b0aeac9353076bb0b5b4fdd9ee050d875190b323f1b156ee4",
+      "bytes": 1152044
+    },
+    {
+      "id": "relax-alpha-ease",
+      "sha256": "db4c12a61118ead8b72767283783ed3782db3b315cde009d562bcf990abb6cc8",
+      "bytes": 1152044
+    },
+    {
+      "id": "relax-432-evening",
+      "sha256": "b98ca17fdfb18e989d5c3098a708421f924547294cd69357af755e0ad9b4c34d",
+      "bytes": 1152044
+    },
+    {
+      "id": "relax-schumann-sim",
+      "sha256": "1406f8203fbea6c510f667af366158d8dc75945f873e4f1a10d392b81a566d0b",
+      "bytes": 1152044
+    },
+    {
+      "id": "relax-breath-pacer",
+      "sha256": "2db1d3941ae84bb0177532059cca1a1978b8f023d12e0886d5af54618b5221f6",
+      "bytes": 1152044
+    },
+    {
+      "id": "relax-heartbeat-calm",
+      "sha256": "85a6d00665e0e533d67cd15266a0eba98a99c19e8f08c80a705c1f7918f38a77",
+      "bytes": 1152044
+    },
+    {
+      "id": "meditate-theta-garden",
+      "sha256": "02509461b1918efe602a4e16b16885e04595534b29431c3515b85b1c4b797c9f",
+      "bytes": 1152044
+    },
+    {
+      "id": "meditate-om-cousto",
+      "sha256": "ee770c0bce184a1fc9f66c772d34de495d44d049c29a60b977508bb579770f2f",
+      "bytes": 1152044
+    },
+    {
+      "id": "meditate-solfeggio-528",
+      "sha256": "af9db56629aae230a28c7c5fda0cfe65dd21fc65f724380d3ec6ccbff97d61d9",
+      "bytes": 1152044
+    },
+    {
+      "id": "meditate-chakra-walk",
+      "sha256": "9e2a7342852ab1c75a125d60050b2eee32b3e04b9872f31bbe92572137a4a506",
+      "bytes": 1152044
+    },
+    {
+      "id": "wellness-vat-40",
+      "sha256": "13dd67212d2d9213872eb70618b553500ebda42e2318f0d926b78f3be86eb014",
+      "bytes": 1152044
+    },
+    {
+      "id": "wellness-vat-scan",
+      "sha256": "f31863a8ade5a2832ed07ec93ee983fc4497bdecca93e79279ad622f0fdb6321",
+      "bytes": 1152044
+    },
+    {
+      "id": "wellness-bowl-relax",
+      "sha256": "e753643c7099ef43e77cfcb865c73fbfde3e8ce2b0b1750c5642856adc13d922",
+      "bytes": 1152044
+    },
+    {
+      "id": "wellness-otto-128",
+      "sha256": "2023ada20879cda695e0c0d85242a5f3da340453c09a1c649a7e55498b7505a7",
+      "bytes": 1152044
+    },
+    {
+      "id": "exp-gamma-40",
+      "sha256": "b37c1d7b326d17f7036519c56bc912046081bc05ed6b6fefdeb94e3cb0490273",
+      "bytes": 1152044
+    },
+    {
+      "id": "exp-assr-40",
+      "sha256": "a700a622fc2784c7f7bd9d78340960b96350dd0714082f1882bf4446cc7496a0",
+      "bytes": 1152044
+    },
+    {
+      "id": "exp-lambda-label",
+      "sha256": "d5f93e8543c77c5617f2aa3d19ad2f75edeed2528efe2ebfdf85a2a875518d8b",
+      "bytes": 1152044
+    },
+    {
+      "id": "exp-schumann-modes",
+      "sha256": "f1585ec32329d593fc1f6d733691c2816536ae05ad750b3660b5390a09ecb7ff",
+      "bytes": 1152044
+    },
+    {
+      "id": "exp-epsilon-null",
+      "sha256": "35c20fd897421b5df3effd6d10e53982f8164a63d7d546ed2b3982ee551065d0",
+      "bytes": 1152044
+    },
+    {
+      "id": "exp-rife-cafl",
+      "sha256": "01484f0d31f35bf5fb72553663c7fac7b2e1619c367d7044c6f52dc1db998240",
+      "bytes": 1152044
+    },
+    {
+      "id": "exp-cyma-commutation",
+      "sha256": "4f899911634f3e5126f215945a796b0b23b4115f8ac1fd8f707781628d19da83",
+      "bytes": 1152044
+    },
+    {
+      "id": "walk-delta",
+      "sha256": "6aebcc489824425784345e934505aabc6e6ac482188f53a432cab46a1605e9ec",
+      "bytes": 1152044
+    },
+    {
+      "id": "walk-theta",
+      "sha256": "551ad90860f9e5222506dcac4f1599d6801c6fe08579edc90eeb41a65689630e",
+      "bytes": 1152044
+    },
+    {
+      "id": "walk-alpha",
+      "sha256": "e7fa29da213cf9e6c25740f84c943d5f16a798252ede2c905c1e9fd68f0ea658",
+      "bytes": 1152044
+    },
+    {
+      "id": "walk-smr",
+      "sha256": "8592094eec0887cacfa64ab2a269d52c99a2d08d6408318c954ddb24a115b5f2",
+      "bytes": 1152044
+    },
+    {
+      "id": "walk-beta",
+      "sha256": "86a0f10d773ba4de5cc7528ba07f5cf28b763afed2636ebb3bef39418566ada4",
+      "bytes": 1152044
+    },
+    {
+      "id": "walk-gamma",
+      "sha256": "8d01f9eaba77eae1684dee28bf19442908ee37cf7499676a5a375806019ec174",
+      "bytes": 1152044
+    },
+    {
+      "id": "relax-schumann-m2",
+      "sha256": "e80244fce3f8060f87fc6ecdadd70c5ff8b38891ca225cd14862acaf9d094799",
+      "bytes": 1152044
+    },
+    {
+      "id": "relax-schumann-m3",
+      "sha256": "659f4f6b08037f53f1e96d351a379d6db3b91ced5f1ef85c21fff4c10b67dd7f",
+      "bytes": 1152044
+    },
+    {
+      "id": "relax-schumann-m4",
+      "sha256": "64b5b36648b6d9153926cb2078e80faf098b0ff59e74e76a997b4b0b516329c5",
+      "bytes": 1152044
+    },
+    {
+      "id": "relax-schumann-m5",
+      "sha256": "5c02a7d66eedc870f76a17a4c17c109f8983f8a09b20c057694b7fd3eec8e269",
+      "bytes": 1152044
+    },
+    {
+      "id": "relax-440-control",
+      "sha256": "58e73f6012e20b62bc2c4730028aa6569025fd3c097b978b4d37d433ea71e18f",
+      "bytes": 1152044
+    },
+    {
+      "id": "exp-gamma-monaural",
+      "sha256": "d26811face73a4a9d1351a01fa06cb42054a631e194750c6087bb0ffb4a55b2c",
+      "bytes": 1152044
+    },
+    {
+      "id": "focus-isochronic-beta",
+      "sha256": "3e23f40276bd479657edd510cc1ab69a6deb2f3944052fdbdada58aeaf7ca280",
+      "bytes": 1152044
+    },
+    {
+      "id": "focus-monaural-smr",
+      "sha256": "58b835b4c5c5040c100b5b178d2a3dcfbeec08c37eea532cdcb839549f28792d",
+      "bytes": 1152044
+    },
+    {
+      "id": "sleep-isochronic-delta",
+      "sha256": "3803d1c542644bc71b226ee3a6014458a30c5d2c30209c80ad65a148c941ffe4",
+      "bytes": 1152044
+    },
+    {
+      "id": "relax-monaural-alpha",
+      "sha256": "741c0ff8199efc9f8aa551b20616cc21ab02fa30fc1d614bc4e80a157d2a0cdf",
+      "bytes": 1152044
+    },
+    {
+      "id": "focus-brown-noise",
+      "sha256": "5860120583a4001faa84ce5c8949274f520d36093af7a10610910ea0ec8e8423",
+      "bytes": 1152044
+    },
+    {
+      "id": "focus-pink-noise",
+      "sha256": "7e3f118098670a9c36f3fcd46fb556f2737c5d79b109628bb0bce3ee6d04e113",
+      "bytes": 1152044
+    },
+    {
+      "id": "relax-breath-coherence",
+      "sha256": "ca473b0df420952af7359718e6284003076c17b4ceb570b45b8efe82b50175cf",
+      "bytes": 1152044
+    },
+    {
+      "id": "sleep-breath-wind-down",
+      "sha256": "b74f486a71eca6c92f745d45eef3140e99bb06eabc2380f6c3e1d3dd66fbb08f",
+      "bytes": 1152044
+    },
+    {
+      "id": "infant-womb-hush",
+      "sha256": "38c60d7a90f07c274df643bc718e89a01029194c097bd0d024260c059df6f48c",
+      "bytes": 1152044
+    },
+    {
+      "id": "infant-heartbeat-70",
+      "sha256": "b385e64d0f2baf1e3203947a63792da11ca043f74f36787558bcd7a2cc743f64",
+      "bytes": 1152044
+    },
+    {
+      "id": "infant-nap-fade",
+      "sha256": "b5a5257e8973899cda1cefd85d23e4b842fa12b0de3c2950d4e468bb590f5fa1",
+      "bytes": 1152044
+    },
+    {
+      "id": "infant-quiet-room",
+      "sha256": "45b5756851bfc446128567e0f64ef377daf26dc4e3566ab6790da0ec10b8d10e",
+      "bytes": 1152044
+    }
+  ],
+  "totalBytes": 59906288
+}
