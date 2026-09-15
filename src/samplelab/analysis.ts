@@ -154,6 +154,7 @@ export async function computeStft(
     const row = f * bins;
     for (let k = 0; k < bins; k++) {
       const p = (re[k] * re[k] + im[k] * im[k]) * scale * scale;
+      power[row + k] = p;
       const db = 10 * Math.log10(Math.max(p, Math.pow(10, DB_FLOOR / 10)));
       powerDb[row + k] = Math.max(DB_FLOOR, db);
     }
