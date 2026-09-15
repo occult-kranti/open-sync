@@ -1,13 +1,13 @@
 /**
- * Audio link \u2014 narrow interface between the Studio engine's AnalyserNode and
+ * Audio link — narrow interface between the Studio engine's AnalyserNode and
  * the Cymatic Studio. Deliberately decoupled: accepts a minimal
  * `AnalyserLike` (structurally compatible with AnalyserNode) or `null`, and
  * degrades to a static, deterministic frame when no audio is available.
  *
  * Physics mode: the dominant spectral frequency is treated as the *driving
  * frequency* of the selected virtual plate (Lorentzian mode superposition in
- * chladni.ts) \u2014 labeled "physically motivated". Art mode: the peak frequency
- * is mapped straight to (n, m) indices \u2014 labeled "artistic interpretation".
+ * chladni.ts) — labeled "physically motivated". Art mode: the peak frequency
+ * is mapped straight to (n, m) indices — labeled "artistic interpretation".
  */
 
 import {
@@ -43,12 +43,12 @@ export const SILENT_FEATURES: AudioFeatures = {
   centroidHz: 0,
 };
 
-/** Byte-value floor below which a bin counts as silence (\u2248 \u221284 dBFS). */
+/** Byte-value floor below which a bin counts as silence (≈ −84 dBFS). */
 const SILENCE_BYTE = 12;
 
 /**
  * Sample spectrum features from an analyser. `null` (engine never started,
- * no AudioContext, browser unsupported) yields SILENT_FEATURES \u2014 the caller
+ * no AudioContext, browser unsupported) yields SILENT_FEATURES — the caller
  * renders the static manual-mode frame. Never throws.
  */
 export function sampleAudioFeatures(
@@ -127,7 +127,7 @@ export function driveFromFeatures(
 /**
  * Smoothly track a changing drive frequency (one-pole smoother) so sweeping
  * the tone glides across the eigenfrequency ladder instead of jumping.
- * `alpha` \u2208 (0, 1]; smaller = smoother. Pass prev = 0 to initialize.
+ * `alpha` ∈ (0, 1]; smaller = smoother. Pass prev = 0 to initialize.
  */
 export function smoothDriveHz(prev: number, next: number, alpha = 0.18): number {
   if (!(prev > 0)) return next;
